@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
  * @author Valentin GOT
  */
 class RealDebridHttpClient {
+
     const API_SCHEME = 'https';
     const API_URL = 'api.real-debrid.com/rest/1.0/';
 
