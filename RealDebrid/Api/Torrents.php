@@ -2,6 +2,12 @@
 
 namespace RealDebrid\Api;
 
+use RealDebrid\Exception\ActionAlreadyDoneException;
+use RealDebrid\Exception\BadRequestException;
+use RealDebrid\Exception\BadTokenException;
+use RealDebrid\Exception\PermissionDeniedException;
+use RealDebrid\Exception\RealDebridException;
+use RealDebrid\Exception\UnknownResourceException;
 use RealDebrid\Request\Torrents\AddMagnetRequest;
 use RealDebrid\Request\Torrents\AddTorrentRequest;
 use RealDebrid\Request\Torrents\AvailableHostsRequest;
@@ -9,6 +15,7 @@ use RealDebrid\Request\Torrents\DeleteRequest;
 use RealDebrid\Request\Torrents\InfoRequest;
 use RealDebrid\Request\Torrents\SelectFilesRequest;
 use RealDebrid\Request\Torrents\TorrentsRequest;
+use stdClass;
 
 /**
  * /torrents namespace
@@ -30,6 +37,12 @@ class Torrents extends EndPoint {
      * @param int $limit Entries returned per page / request (must be within 0 and 100, default: 50)
      * @param int|null $offset Starting offset (must be within 0 and X-Total-Count HTTP header)
      * @return array User torrents list
+     * @throws BadTokenException
+     * @throws PermissionDeniedException
+     * @throws RealDebridException
+     * @throws UnknownResourceException
+     * @throws ActionAlreadyDoneException
+     * @throws BadRequestException
      */
     public function get($filter = false, $page = 1, $limit = 50, $offset = null) {
         return $this->request(new TorrentsRequest($this->token, $filter, $page, $limit, $offset));
@@ -39,7 +52,13 @@ class Torrents extends EndPoint {
      * Get all information on the asked torrent
      *
      * @param string $id Torrent ID
-     * @return \stdClass Torrent information
+     * @return stdClass Torrent information
+     * @throws ActionAlreadyDoneException
+     * @throws BadRequestException
+     * @throws BadTokenException
+     * @throws PermissionDeniedException
+     * @throws RealDebridException
+     * @throws UnknownResourceException
      */
     public function torrent($id) {
         return $this->request(new InfoRequest($this->token, $id));
@@ -49,6 +68,12 @@ class Torrents extends EndPoint {
      * Get available hosts to upload the torrent to
      *
      * @return array Available hosts
+     * @throws ActionAlreadyDoneException
+     * @throws BadRequestException
+     * @throws BadTokenException
+     * @throws PermissionDeniedException
+     * @throws RealDebridException
+     * @throws UnknownResourceException
      */
     public function availableHosts() {
         return $this->request(new AvailableHostsRequest($this->token));
@@ -61,7 +86,13 @@ class Torrents extends EndPoint {
      * @param string $path Path to the torrent file
      * @param int|null $host Hoster domain (retrieved from /torrents/availableHosts)
      * @param int|null $split Split size (under max_split_size of concerned hoster retrieved from /torrents/availableHosts)
-     * @return \stdClass Torrent information
+     * @return stdClass Torrent information
+     * @throws ActionAlreadyDoneException
+     * @throws BadRequestException
+     * @throws BadTokenException
+     * @throws PermissionDeniedException
+     * @throws RealDebridException
+     * @throws UnknownResourceException
      */
     public function addTorrent($path, $host = null, $split = null) {
         return $this->request(new AddTorrentRequest($this->token, $path, $host, $split));
@@ -74,7 +105,13 @@ class Torrents extends EndPoint {
      * @param string $magnet Magnet link
      * @param int|null $host Hoster domain (retrieved from /torrents/availableHosts)
      * @param int|null $split Split size (under max_split_size of concerned hoster retrieved from /torrents/availableHosts)
-     * @return \stdClass Magnet information
+     * @return stdClass Magnet information
+     * @throws ActionAlreadyDoneException
+     * @throws BadRequestException
+     * @throws BadTokenException
+     * @throws PermissionDeniedException
+     * @throws RealDebridException
+     * @throws UnknownResourceException
      */
     public function addMagnet($magnet, $host = null, $split = null) {
         return $this->request(new AddMagnetRequest($this->token, $magnet, $host, $split));
@@ -86,6 +123,12 @@ class Torrents extends EndPoint {
      * Warning: To get file IDs, use /torrents/info/{id}
      * @param string $id Torrent ID
      * @param array $files Array of selected files IDs
+     * @throws ActionAlreadyDoneException
+     * @throws BadRequestException
+     * @throws BadTokenException
+     * @throws PermissionDeniedException
+     * @throws RealDebridException
+     * @throws UnknownResourceException
      */
     public function selectFiles($id, array $files = array()) {
         $this->request(new SelectFilesRequest($this->token, $id, $files));
@@ -95,6 +138,12 @@ class Torrents extends EndPoint {
      * Delete a torrent from torrents list
      *
      * @param string $id Torrent ID
+     * @throws ActionAlreadyDoneException
+     * @throws BadRequestException
+     * @throws BadTokenException
+     * @throws PermissionDeniedException
+     * @throws RealDebridException
+     * @throws UnknownResourceException
      */
     public function delete($id) {
         $this->request(new DeleteRequest($this->token, $id));

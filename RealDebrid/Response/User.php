@@ -2,6 +2,7 @@
 
 namespace RealDebrid\Response;
 use Carbon\Carbon;
+use Exception;
 
 /**
  * User
@@ -56,6 +57,11 @@ class User extends AbstractResponse {
      */
     private $expiration;
 
+    /**
+     * User constructor.
+     * @param $json
+     * @throws Exception
+     */
     public function __construct($json) {
         parent::__construct($json);
 
